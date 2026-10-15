@@ -67,13 +67,13 @@
     </div>
     <script>
         const KARENS = [
-            { id: 'common_karen', name: 'Обычный Карен', tier: 'common', img: 'https://i.yapx.ru/eS6WKb.jpg' },
+           { id: 'common_karen', name: 'Обычный Карен', tier: 'common', img: 'https://i.yapx.ru/eS6WKb.jpg' },
             { id: 'alparen', name: 'Карен-альпарен', tier: 'rare', img: 'https://i.yapx.ru/eS6WDb.jpg' },
             { id: 'karamelka', name: 'Каренка карамелька', tier: 'rare', img: 'https://i.yapx.ru/eS6V1b.jpg' },
             { id: 'boxren', name: 'Карен Боксрен', tier: 'rare', img: 'https://i.yapx.ru/eS6VJb.jpg' },
             { id: 'dobren', name: 'Добрен', tier: 'super', img: 'https://i.yapx.ru/eS6U4b.jpg' },
             { id: 'zloren', name: 'Злорен', tier: 'super', img: 'https://i.yapx.ru/eS6Uvb.jpg' },
-            { id: 'golden_karen', name: 'Golden Karen', tier: 'secret', img: 'https://i.yapx.ru/eS6Vib.jpg' }
+            { id: 'golden_karen', name: 'Golden Karen', tier: 'secret', img: 'https://i.yapx.ru/eS6Vib.jpg }
         ];
         let balance = 10; let inventory = {}; let adminClicks = 0; let cheatActive = false;
         function checkPassword() {
@@ -89,7 +89,7 @@
             KARENS.forEach(k => {
                 if(inventory[k.id]) {
                     const card = document.createElement('div'); card.className = `inv-card bg-${k.tier}`;
-                        card.innerHTML = `<div class="count">x${inventory[k.id]}</div><img src="${k.img}"><div class="name">${k.name}</div>`;
+                    card.innerHTML = `<div class="count">x${inventory[k.id]}</div><img src="${k.img}"><div class="name">${k.name}</div>`;
                     grid.appendChild(card);
                 }
             });
@@ -117,7 +117,7 @@
             setTimeout(() => {
                 tape.style.transition = 'transform 4s cubic-bezier(0.1, 0.8, 0.1, 1)';
                 const cardWidth = 100; const wrapperWidth = document.querySelector('.roulette-wrapper').offsetWidth;
-                    const targetOffset = -(prizeIndex * cardWidth) + (wrapperWidth / 2) - (cardWidth / 2);
+                const targetOffset = -(prizeIndex * cardWidth) + (wrapperWidth / 2) - (cardWidth / 2);
 tape.style.transform = translateX(${targetOffset}px);
 }, 50);
 setTimeout(() => {
