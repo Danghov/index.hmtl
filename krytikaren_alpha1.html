@@ -14,7 +14,7 @@
         #admin-trigger { cursor: pointer; font-size: 14px; color: #555; }
         .balance-panel { font-size: 18px; margin: 15px 0; background: #1e1e1e; padding: 10px; border-radius: 10px; border: 1px solid #333; }
         .roulette-wrapper { position: relative; width: 100%; height: 130px; background: #1a1a1a; border: 3px solid #333; border-radius: 12px; overflow: hidden; margin: 25px 0; box-shadow: inset 0 0 20px #000; }
-        .pointer { absolute; top: 0; left: 50%; transform: translateX(-50%); width: 4px; height: 100%; background: #ff3333; z-index: 10; box-shadow: 0 0 10px #ff3333; }
+        .pointer { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 4px; height: 100%; background: #ff3333; z-index: 10; box-shadow: 0 0 10px #ff3333; }
         .roulette-tape { display: flex; position: absolute; left: 0; top: 10px; height: 110px; will-change: transform; }
         .slot-card { width: 90px; height: 110px; margin: 0 5px; background: #252525; border-radius: 8px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; border-bottom: 5px solid #fff; }
         .slot-card img { width: 70px; height: 70px; object-fit: cover; border-radius: 6px; }
@@ -30,8 +30,8 @@
         .inv-card img { width: 90px; height: 90px; object-fit: cover; border-radius: 8px; }
         .inv-card .name { font-size: 12px; margin-top: 8px; font-weight: bold; text-align: center; }
         .inv-card .count { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.7); padding: 2px 6px; font-size: 11px; border-radius: 5px; color: #ffd700; }
-        #win-modal { position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 100; }
-        .modal-content { background: #222; padding: 30px; border-radius: 20px; text-align: center; border: 3px solid #fff; max-width: 300px; }.modal-content img { width: 180px; height: 180px; object-fit: cover; border-radius: 12px; }
+        #win-modal { position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 100; }.modal-content { background: #222; padding: 30px; border-radius: 20px; text-align: center; border: 3px solid #fff; max-width: 300px; }
+        .modal-content img { width: 180px; height: 180px; object-fit: cover; border-radius: 12px; }
         #admin-panel { display: none; background: #2c1a1a; border: 1px solid #ff5555; padding: 15px; border-radius: 10px; margin-top: 20px; }
         .admin-btn { background: #ff5555; color: white; border: none; padding: 5px 10px; margin: 5px; cursor: pointer; border-radius: 5px;}
     </style>
@@ -66,7 +66,8 @@
         </div>
     </div>
     <script>
-        const KARENS = [{ id: 'common_karen', name: 'Обычный Карен', tier: 'common', img: 'https://i.yapx.ru/eS6WKb.jpg' },
+        const KARENS = [
+            { id: 'common_karen', name: 'Обычный Карен', tier: 'common', img: 'https://i.yapx.ru/eS6WKb.jpg' },
             { id: 'alparen', name: 'Карен-альпарен', tier: 'rare', img: 'https://i.yapx.ru/eS6WDb.jpg' },
             { id: 'karamelka', name: 'Каренка карамелька', tier: 'rare', img: 'https://i.yapx.ru/eS6V1b.jpg' },
             { id: 'boxren', name: 'Карен Боксрен', tier: 'rare', img: 'https://i.yapx.ru/eS6VJb.jpg' },
@@ -98,15 +99,13 @@
         function updateUI() {
             document.getElementById('balance-val').innerText = balance;
             let uniqueCount = 0;
-            if (inventory) {
-                uniqueCount = Object.keys(inventory).length;
-            }
+            if (inventory) { uniqueCount = Object.keys(inventory).length; }
             document.getElementById('col-val').innerText = uniqueCount + " / " + KARENS.length;
             const grid = document.getElementById('inventory'); 
-            if (grid) {
-                grid.innerHTML = '';
+            if (grid) {grid.innerHTML = '';
                 KARENS.forEach(function(k) {
-                    if (inventory[k.id]) {const card = document.createElement('div'); 
+                    if (inventory[k.id]) {
+                        const card = document.createElement('div'); 
                         card.className = "inv-card bg-" + k.tier;
                         card.innerHTML = "<div class='count'>x" + inventory[k.id] + "</div><img src='" + k.img + "'><div class='name'>" + k.name + "</div>";
                         grid.appendChild(card);
@@ -138,8 +137,13 @@
             if (cheatActive) { return KARENS.find(function(k) { return k.id === 'golden_karen'; }); }
             const rand = Math.random() * 100;
             if (rand < 0.005) { return KARENS.find(function(k) { return k.id === 'golden_karen'; }); }
-            const rares = KARENS.filter(function(k) { return k.tier === 'rare'; });
-return rares[Math.floor(Math.random() * rares.length)];
+            if (rand < 1.0) { 
+                const supers = KARENS.filter(function(k) { return k.tier === 'super'; });
+                return supers[Math.floor(Math.random() * supers.length)]; 
+            }
+            if (rand < 40.0) { 
+                const rares = KARENS.filter(function(k) { return k.tier === 'rare'; });
+                return rares[Math.floor(Math.random() * rares.length)];
 }
 return KARENS.find(function(k) { return k.id === 'common_karen'; });
 }
@@ -181,8 +185,3 @@ function adminClick() { adminClicks++; if (adminClicks >= 5) { document.getEleme
 function addSpins() { balance += 100; updateUI(); }
 function clearInv() { inventory = {}; updateUI(); }
 function toggleCheat() { cheatActive = !cheatActive; document.getElementById('cheat-status').innerText = cheatActive ? 'ВКЛ' : 'ВЫКЛ'; }
-            if (rand < 1.0) { 
-                const supers = KARENS.filter(function(k) { return k.tier === 'super'; });
-                return supers[Math.floor(Math.random() * supers.length)]; 
-            }
-            if (rand < 40.0) {
